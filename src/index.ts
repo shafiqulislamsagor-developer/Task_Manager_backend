@@ -1,7 +1,9 @@
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
+import authRoutes from "./routes/authRoutes";
 
 // config .env
 dotenv.config();
@@ -12,11 +14,14 @@ const port = process.env.PORT || 3000;
 // middlewares
 app.use(cors());
 app.use(express.json());
-
+app.use(cookieParser());
 // test routes
 app.get("/", (req, res) => {
   res.send("hello world");
 });
+
+// routes
+app.use("/api/auth", authRoutes);
 
 // mongodb connection
 mongoose
