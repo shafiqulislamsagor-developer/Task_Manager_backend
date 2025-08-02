@@ -3,7 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
+import { authMiddleware } from "./middlewares/authMiddlewares";
 import authRoutes from "./routes/authRoutes";
+import taskRoutes from "./routes/taskRoutes";
 
 // config .env
 dotenv.config();
@@ -22,6 +24,7 @@ app.get("/", (req, res) => {
 
 // routes
 app.use("/api/auth", authRoutes);
+app.use("/api/task", authMiddleware, taskRoutes);
 
 // mongodb connection
 mongoose
