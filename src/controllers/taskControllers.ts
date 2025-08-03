@@ -68,4 +68,63 @@ const getTasks = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export { createTask, getTasks };
+const getTaskId = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { role, userId } = req.user!;
+
+    const task = await Task.findById(id);
+
+    if (!task) return res.status(404).json({ message: "Task not found" });
+
+    if (role !== "admin" && task.user.toString() !== userId) {
+      return res.status(401).json({ message: "Access denied" });
+    }
+
+    res.status(200).json({ message: "Task found", data: task });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server errors", err });
+  }
+};
+
+const updateTask = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { role, userId } = req.user!;
+
+    const updates = req.body;
+    const task = await Task.findById(id);
+    if (!task) return res.status(404).json({ message: "Task not found" });
+
+    if (role !== "admin" && task.user.toString() !== userId)
+      return res.status(403).json({ message: "Access denied" });
+
+    Object.assign(task, updates);
+
+    await task.save();
+
+    res.status(200).json({ message: "Task updated successfully", data: task });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server errors", err });
+  }
+};
+
+const deleteTask = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { role, userId } = req.user!;
+
+    const task = await Task.findById(id);
+    if (!task) return res.status(404).json({ message: "Task not found" });
+
+    if (role !== "admin" && task.user.toString() !== userId)
+      return res.status(403).json({ message: "Access denied" });
+
+    await task.deleteOne();
+
+    res.status(200).json({ message: "Task deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server errors", err });
+  }
+};
+export { createTask, getTaskId, getTasks, updateTask, deleteTask };
