@@ -28,13 +28,6 @@ const register = async (req: Request, res: Response) => {
 
     res.status(201).json({
       message: "Registered successfully",
-      user: {
-        id: createdUser._id,
-        name: createdUser.name,
-        email: createdUser.email,
-        role: createdUser.role,
-      },
-      accessToken,
     });
   } catch (err) {
     res.status(500).json({ message: "Server Error", error: err });
