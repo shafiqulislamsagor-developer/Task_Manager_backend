@@ -55,7 +55,7 @@ const login = async (req: Request, res: Response) => {
     // Set Refresh Token as HttpOnly cookie
     res.cookie("refreshToken", refreshToken, {
       secure: true,
-
+      httpOnly: true,
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
