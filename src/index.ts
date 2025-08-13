@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import { authMiddleware } from "./middlewares/authMiddlewares";
 import authRoutes from "./routes/authRoutes";
 import taskRoutes from "./routes/taskRoutes";
+import userRoutes from "./routes/userRoutes";
 
 // config .env
 dotenv.config();
@@ -31,6 +32,7 @@ app.get("/", (req, res) => {
 // routes
 app.use("/api/auth", authRoutes);
 app.use("/api/task", authMiddleware, taskRoutes);
+app.use("/api/user", authMiddleware, userRoutes);
 
 // mongodb connection
 mongoose
