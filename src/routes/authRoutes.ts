@@ -9,7 +9,7 @@ const route = express.Router();
 
 route.post("/register", register);
 route.post("/login", login);
-route.post("/refresh-token", refreshToken);
+route.get("/refresh-token", refreshToken);
 route.post("/logout", logout);
 
 export default route;

@@ -52,11 +52,10 @@ const login = async (req: Request, res: Response) => {
     const accessToken = generateAccessToken(userId, user.role);
     const refreshToken = generateRefreshToken(userId, user.role);
 
-    // Set Refresh Token as HttpOnly cookie
     res.cookie("refreshToken", refreshToken, {
-      secure: true,
       httpOnly: true,
-      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -69,6 +68,7 @@ const login = async (req: Request, res: Response) => {
         role: user.role,
       },
       accessToken,
+      refreshToken,
     });
   } catch (err) {
     res.status(500).json({ message: "Server Error", error: err });
@@ -77,22 +77,28 @@ const login = async (req: Request, res: Response) => {
 
 const refreshToken = (req: Request, res: Response) => {
   try {
+    // 1. Get refresh token from cookies
     const refreshToken = req.cookies.refreshToken;
+    console.log(refreshToken);
+
     if (!refreshToken) {
-      return res.status(401).json({ message: "Refresh token not found" });
+      return res.status(401).json({ message: "Authentication required" });
     }
 
+    // 2. Verify the refresh token
     const decoded = jwt.verify(
       refreshToken,
-      process.env.JWT_SECRET as string
+      process.env.REFRESH_TOKEN_SECRET as string
     ) as {
       userId: string;
       role: string;
     };
-
+    console.log(decoded);
+    // 3. Generate new access token
     const newAccessToken = generateAccessToken(decoded.userId, decoded.role);
 
-    res.status(200).json({
+    // 4. Send the new access token
+    return res.status(200).json({
       accessToken: newAccessToken,
     });
   } catch (err) {
