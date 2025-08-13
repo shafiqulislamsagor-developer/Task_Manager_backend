@@ -17,7 +17,10 @@ const port = process.env.PORT || 3000;
 // middlewares
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: [
+      "http://localhost:3000",
+      "https://task-manager-frontend-nu-six.vercel.app/",
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
