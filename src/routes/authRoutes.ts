@@ -5,11 +5,12 @@ import {
   refreshToken,
   register,
 } from "../controllers/authControllers";
-const route = express.Router();
 
-route.post("/register", register);
-route.post("/login", login);
-route.get("/refresh-token", refreshToken);
-route.post("/logout", logout);
+const router = express.Router();
 
-export default route;
+router.post("/register", register);
+router.post("/login", login);
+router.get("/refresh-token", refreshToken);
+router.post("/logout", logout);
+
+export default router;

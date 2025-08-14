@@ -8,13 +8,10 @@ import authRoutes from "./routes/authRoutes";
 import taskRoutes from "./routes/taskRoutes";
 import userRoutes from "./routes/userRoutes";
 
-// config .env
 dotenv.config();
 const app = express();
+const port = process.env.PORT || 5000;
 
-const port = process.env.PORT || 3000;
-
-// middlewares
 app.use(
   cors({
     origin: [
